@@ -12,25 +12,38 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * @author Samone Morris
+ * @date   03/03/2018
  */
 package com.example.android.favoritetoys;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    // TODO (1) Declare a TextView variable called mToysListTextView
+    // COMPLETED (1) Declare a TextView variable called mToysListTextView
+    private TextView mToysListTextView;
+    private String[] toyNames;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // TODO (3) Use findViewById to get a reference to the TextView from the layout
+        // COMPLETED (3) Use findViewById to get a reference to the TextView from the layout
+        mToysListTextView = (TextView) findViewById( R.id.tv_toy_names );
 
-        // TODO (4) Use the static ToyBox.getToyNames method and store the names in a String array
+        // COMPLETED (4) Use the static ToyBox.getToyNames method and store the names in a String array
+        toyNames = ToyBox.getToyNames();
 
-        // TODO (5) Loop through each toy and append the name to the TextView (add \n for spacing)
+        // COMPLETED (5) Loop through each toy and append the name to the TextView (add \n for spacing)
+        int i,
+            length = toyNames.length;
+        for(i = 0; i < length; i++){
+            mToysListTextView.append( toyNames[i] + "\n");
+        }// end for
     }
 }
