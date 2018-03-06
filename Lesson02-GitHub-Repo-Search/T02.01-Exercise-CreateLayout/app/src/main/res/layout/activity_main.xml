@@ -46,18 +46,31 @@
         android:text="Hello World!"/>
     -->
 
-    <!--TODO (7) Add an EditText-->
-    <!--TODO (8) Give the EditText an id of @+id/et_search_box-->
-    <!--TODO (9) Set the text size to 22sp-->
-    <!--TODO (10) Set the width to match_parent and the height to wrap_content-->
-    <!--TODO (11) Provide a hint telling the user to enter a query and then click search-->
+    <!--COMPLETED (7) Add an EditText-->
+    <!--COMPLETED (8) Give the EditText an id of @+id/et_search_box-->
+    <!--COMPLETED (9) Set the text size to 22sp-->
+    <!--COMPLETED (10) Set the width to match_parent and the height to wrap_content-->
+    <!--COMPLETED (11) Provide a hint telling the user to enter a query and then click search-->
+    <EditText
+        android:id="@+id/et_search_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:hint="Enter a query and click Search"/>
 
-    <!--TODO (12) Add a TextView-->
-    <!--TODO (13) Give the TextView an id of @+id/tv_url_display-->
-    <!--TODO (14) Set the text size to 22sp-->
-    <!--TODO (15) Set the width to wrap_content and the height to wrap_content-->
-    <!--TODO (16) Give the TextView a top margin of 8dp-->
-    <!--TODO (17) Set the text to tell the user their search URL will show up here when they click search-->
+    <!--COMPLETED (12) Add a TextView-->
+    <!--COMPLETED (13) Give the TextView an id of @+id/tv_url_display-->
+    <!--COMPLETED (14) Set the text size to 22sp-->
+    <!--COMPLETED (15) Set the width to wrap_content and the height to wrap_content-->
+    <!--COMPLETED (16) Give the TextView a top margin of 8dp-->
+    <!--COMPLETED (17) Set the text to tell the user their search URL will show up here when they click search-->
+    <TextView
+        android:id="@+id/tv_url_display"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="22sp"
+        android:text="The Search URL will appear hear once 'Search' is clicked."/>
 
     <!--TODO (18) Add a ScrollView-->
     <!--TODO (19) Set the width to match_parent and the height to wrap_content-->
