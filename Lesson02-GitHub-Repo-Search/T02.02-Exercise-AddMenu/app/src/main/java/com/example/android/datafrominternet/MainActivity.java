@@ -17,6 +17,7 @@ package com.example.android.datafrominternet;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -48,9 +49,18 @@ public class MainActivity extends AppCompatActivity {
     // COMPLETED (7) Set the title to the search string ("Search") from strings.xml
     // Do 2 - 7 in main.xml ///////////////////////////////////////////////////////////////////////
 
-    // TODO (8) Override onCreateOptionsMenu
-    // TODO (9) Within onCreateOptionsMenu, use getMenuInflater().inflate to inflate the main
-    // TODO (10) Return true to display your main
+    // COMPLETED (8) Override onCreateOptionsMenu
+    // COMPLETED (9) Within onCreateOptionsMenu, use getMenuInflater().inflate to inflate the main
+    // COMPLETED (10) Return true to display your main
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //return super.onCreateOptionsMenu(menu);
+        
+        getMenuInflater().inflate( R.menu.main, menu );
+
+        return true;
+    }// end onCreateOptionsMenu(...)
 
     // TODO (11) Override onOptionsItemSelected
     // TODO (12) Within onOptionsItemSelected, get the ID of the item that was selected
