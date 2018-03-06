@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
         // COMPLETED (2) Call getResponseFromHttpUrl and display the results in mSearchResultsTextView
         // COMPLETED (3) Surround the call to getResponseFromHttpUrl with a try / catch block to catch an IOException
+        // COMPLETED (4) Set the results in TextView mSearchResultsTextView
 
         String jsonResponse = null;
 
@@ -70,6 +71,10 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }// end try / catch
+
+        if( jsonResponse != null ){
+            mSearchResultsTextView.setText( jsonResponse );
+        }// end if
     }// end makeGithubSearchQuery()
 
     @Override
