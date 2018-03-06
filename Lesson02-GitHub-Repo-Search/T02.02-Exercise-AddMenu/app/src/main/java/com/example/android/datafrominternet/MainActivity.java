@@ -15,11 +15,14 @@
  */
 package com.example.android.datafrominternet;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -56,15 +59,31 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //return super.onCreateOptionsMenu(menu);
-        
+
         getMenuInflater().inflate( R.menu.main, menu );
 
         return true;
     }// end onCreateOptionsMenu(...)
 
-    // TODO (11) Override onOptionsItemSelected
-    // TODO (12) Within onOptionsItemSelected, get the ID of the item that was selected
-    // TODO (13) If the item's ID is R.id.action_search, show a Toast and return true to tell Android that you've handled this main click
-    // TODO (14) Don't forgot to call .show() on your Toast
-    // TODO (15) If you do NOT handle the main click, return super.onOptionsItemSelected to let Android handle the main click
+    // COMPLETED (11) Override onOptionsItemSelected
+    // COMPLETED (12) Within onOptionsItemSelected, get the ID of the item that was selected
+    // COMPLETED (13) If the item's ID is R.id.action_search, show a Toast and return true to tell Android that you've handled this main click
+    // COMPLETED (14) Don't forgot to call .show() on your Toast
+    // COMPLETED (15) If you do NOT handle the main click, return super.onOptionsItemSelected to let Android handle the main click
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id_itemSelected = item.getItemId();
+
+        if( id_itemSelected == R.id.action_search ){
+            String toast_text = "Search clicked!";
+            Toast.makeText( MainActivity.this,
+                            "Search Clicked!",
+                             Toast.LENGTH_SHORT).show();
+
+            return true;
+        }// end if
+
+        return super.onOptionsItemSelected(item);
+    }// end onOptionsItemSelected(...)
 }
