@@ -15,9 +15,12 @@
  */
 package com.example.android.datafrominternet.utilities;
 
+import android.net.Uri;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
@@ -45,9 +48,27 @@ public class NetworkUtils {
      * @return The URL to use to query the weather server.
      */
     public static URL buildUrl(String githubSearchQuery) {
-        // TODO (1) Fill in this method to build the proper Github query URL
-        return null;
-    }
+        // COMPLETED (1) Fill in this method to build the proper Github query URL
+        Uri uri = Uri.parse( GITHUB_BASE_URL ).buildUpon()
+                     .appendQueryParameter( PARAM_QUERY , githubSearchQuery)
+                     .appendQueryParameter( PARAM_SORT, sortBy )
+                     .build();
+
+        // ------------------------------------------------------------------------
+        // We need to return a URL object, so attempt to create a URL object with
+        // the given Uri. If it is not possible to construct the URL from the Uri
+        // we will just return 'null' anyway.
+
+        URL url = null;
+
+        try {
+            url = new URL( uri.toString() );
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }// end try / catch
+
+        return url;
+    }// end buildUrl(...)
 
     /**
      * This method returns the entire result from the HTTP response.

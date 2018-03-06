@@ -18,11 +18,16 @@ package com.example.android.datafrominternet;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.android.datafrominternet.utilities.NetworkUtils;
+
+import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,8 +48,32 @@ public class MainActivity extends AppCompatActivity {
         mSearchResultsTextView = (TextView) findViewById(R.id.tv_github_search_results_json);
     }
 
-    // TODO (2) Create a method called makeGithubSearchQuery
-    // TODO (3) Within this method, build the URL with the text from the EditText and set the built URL to the TextView
+    // COMPLETED (2) Create a method called makeGithubSearchQuery
+    // COMPLETED (3) Within this method, build the URL with the text from the EditText and set the built URL to the TextView
+    private void makeGithubSearchQuery(final String query){
+        // If the query entered is blank or null, request that some text is entered first!
+        if( TextUtils.isEmpty( query ) ){
+            Toast.makeText(this,
+                           "Enter a query!",
+                            Toast.LENGTH_SHORT).show();
+            return;
+        }// end if
+
+        URL url = NetworkUtils.buildUrl( query );
+
+        // -----------------------------------------------------------------------------------------
+        // If the URL is null, let the user know that the action cannot be completed
+        if( url == null ){
+            Toast.makeText(this,
+                           "URL error occurred; Enter a different query",
+                            Toast.LENGTH_SHORT).show();
+            return;
+        }// end if
+
+        // -----------------------------------------------------------------------------------------
+        // Otherwise, no errors occurred. Display the URL in the TextView
+        mUrlDisplayTextView.setText( url.toString() );
+    }// end makeGithubSearchQuery()
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -56,11 +85,16 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemThatWasClickedId = item.getItemId();
         if (itemThatWasClickedId == R.id.action_search) {
-            // TODO (4) Remove the Toast message when the search menu item is clicked
-            Context context = MainActivity.this;
-            String textToShow = "Search clicked";
-            Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
-            // TODO (5) Call makeGithubSearchQuery when the search menu item is clicked
+            // COMPLETED (4) Remove the Toast message when the search menu item is clicked
+            // Context context = MainActivity.this;
+            // String textToShow = "Search clicked";
+            // Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
+
+            // COMPLETE (5) Call makeGithubSearchQuery when the search menu item is clicked
+            makeGithubSearchQuery( mSearchBoxEditText.getText()
+                                                     .toString()
+                                                     .trim()
+            );
             return true;
         }
         return super.onOptionsItemSelected(item);
