@@ -12,6 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * @author Samone Morris
+ * @date   03/06/2018
  */
 package com.example.android.datafrominternet;
 
@@ -24,6 +27,7 @@ import android.widget.TextView;
 
 import com.example.android.datafrominternet.utilities.NetworkUtils;
 
+import java.io.IOException;
 import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
@@ -55,9 +59,18 @@ public class MainActivity extends AppCompatActivity {
         String githubQuery = mSearchBoxEditText.getText().toString();
         URL githubSearchUrl = NetworkUtils.buildUrl(githubQuery);
         mUrlDisplayTextView.setText(githubSearchUrl.toString());
-        // TODO (2) Call getResponseFromHttpUrl and display the results in mSearchResultsTextView
-        // TODO (3) Surround the call to getResponseFromHttpUrl with a try / catch block to catch an IOException
-    }
+
+        // COMPLETED (2) Call getResponseFromHttpUrl and display the results in mSearchResultsTextView
+        // COMPLETED (3) Surround the call to getResponseFromHttpUrl with a try / catch block to catch an IOException
+
+        String jsonResponse = null;
+
+        try {
+            jsonResponse = NetworkUtils.getResponseFromHttpUrl( githubSearchUrl );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }// end try / catch
+    }// end makeGithubSearchQuery()
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
