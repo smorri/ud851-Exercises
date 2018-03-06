@@ -12,15 +12,20 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * @author Samone Morris
+ * @date   03/06/2018
  */
 package com.example.android.datafrominternet;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.datafrominternet.utilities.NetworkUtils;
 
@@ -54,21 +59,39 @@ public class MainActivity extends AppCompatActivity {
      */
     private void makeGithubSearchQuery() {
         String githubQuery = mSearchBoxEditText.getText().toString();
+
+        // If the query is empty or null, request the user enter some text
+        if ( TextUtils.isEmpty( githubQuery.trim() ) ){
+            Toast.makeText( this,
+                    "Input a query!",
+                    Toast.LENGTH_SHORT
+            ).show();
+
+
+            return;
+        }// end if
+
         URL githubSearchUrl = NetworkUtils.buildUrl(githubQuery);
         mUrlDisplayTextView.setText(githubSearchUrl.toString());
-        String githubSearchResults = null;
-        try {
-            githubSearchResults = NetworkUtils.getResponseFromHttpUrl(githubSearchUrl);
-            mSearchResultsTextView.setText(githubSearchResults);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        // TODO (4) Create a new GithubQueryTask and call its execute method, passing in the url to query
+
+        /* This code can be omitted since we are performing this action using an Async Task
+            String githubSearchResults = null;
+            try {
+                githubSearchResults = NetworkUtils.getResponseFromHttpUrl(githubSearchUrl);
+                mSearchResultsTextView.setText(githubSearchResults);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        */
+
+        // COMPLETE (4) Create a new GithubQueryTask and call its execute method, passing in the url to query
+        GithubQueryTask asyncTask = new GithubQueryTask();
+        asyncTask.execute( githubSearchUrl );
     }
 
     // COMPLETED (1) Create a class called GithubQueryTask that extends AsyncTask<URL, Void, String>
     // COMPLETED (2) Override the doInBackground method to perform the query. Return the results. (Hint: You've already written the code to perform the query)
-    // COMPLETED (3) Override onPostExecute to display the results in the TextView
+    // COMPLETE (3) Override onPostExecute to display the results in the TextView
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

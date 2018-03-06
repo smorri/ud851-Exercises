@@ -1,3 +1,9 @@
+/*
+ * Async Task : GithubQueryTask
+ *
+ * @author Samone Morris
+ * @date   03/06/2018
+ */
 package com.example.android.datafrominternet;
 
 import android.os.AsyncTask;
