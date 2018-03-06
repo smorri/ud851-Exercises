@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView mUrlDisplayTextView;
 
-    private TextView mSearchResultsTextView;
+    private static TextView mSearchResultsTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +66,9 @@ public class MainActivity extends AppCompatActivity {
         // TODO (4) Create a new GithubQueryTask and call its execute method, passing in the url to query
     }
 
-    // TODO (1) Create a class called GithubQueryTask that extends AsyncTask<URL, Void, String>
-    // TODO (2) Override the doInBackground method to perform the query. Return the results. (Hint: You've already written the code to perform the query)
-    // TODO (3) Override onPostExecute to display the results in the TextView
+    // COMPLETED (1) Create a class called GithubQueryTask that extends AsyncTask<URL, Void, String>
+    // COMPLETED (2) Override the doInBackground method to perform the query. Return the results. (Hint: You've already written the code to perform the query)
+    // COMPLETED (3) Override onPostExecute to display the results in the TextView
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -85,4 +85,8 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    static void updateUi(final String result){
+        mSearchResultsTextView.setText( result );
+    }// end updateUi(...)
 }
