@@ -74,14 +74,18 @@ public class MainActivity extends AppCompatActivity {
         new GithubQueryTask().execute(githubSearchUrl);
     }
 
-    // TODO (14) Create a method called showJsonDataView to show the data and hide the error
+    // COMPLETED (14) Create a method called showJsonDataView to show the data and hide the error
     private void showJsonDataView(final String data){
+        textviewError.setVisibility( View.INVISIBLE );
+        mSearchResultsTextView.setVisibility( View.VISIBLE );
 
+        mSearchResultsTextView.setText( data );
     }// end showJsonDataView(...)
 
-    // TODO (15) Create a method called showErrorMessage to show the error and hide the data
+    // COMPLETED (15) Create a method called showErrorMessage to show the error and hide the data
     private void showErrorMessage(){
-
+        textviewError.setVisibility( View.VISIBLE );
+        mSearchResultsTextView.setVisibility( View.INVISIBLE );
     }// end showErrorMessage()
 
     public class GithubQueryTask extends AsyncTask<URL, Void, String> {
@@ -89,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
         // COMPLETED (26) Override onPreExecute to set the loading indicator to visible
         @Override
         protected void onPreExecute() {
+            mSearchResultsTextView.setVisibility( View.INVISIBLE );
             progressBar.setVisibility( View.VISIBLE );
         }// end onPreExecute()
 
