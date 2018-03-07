@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -74,12 +75,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // TODO (14) Create a method called showJsonDataView to show the data and hide the error
+    private void showJsonDataView(final String data){
+
+    }// end showJsonDataView(...)
 
     // TODO (15) Create a method called showErrorMessage to show the error and hide the data
+    private void showErrorMessage(){
+
+    }// end showErrorMessage()
 
     public class GithubQueryTask extends AsyncTask<URL, Void, String> {
 
-        // TODO (26) Override onPreExecute to set the loading indicator to visible
+        // COMPLETED (26) Override onPreExecute to set the loading indicator to visible
+        @Override
+        protected void onPreExecute() {
+            progressBar.setVisibility( View.VISIBLE );
+        }// end onPreExecute()
 
         @Override
         protected String doInBackground(URL... params) {
@@ -95,12 +106,18 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String githubSearchResults) {
-            // TODO (27) As soon as the loading is complete, hide the loading indicator
+            // COMPLETED (27) As soon as the loading is complete, hide the loading indicator
+            progressBar.setVisibility( View.INVISIBLE );
+
             if (githubSearchResults != null && !githubSearchResults.equals("")) {
-                // TODO (17) Call showJsonDataView if we have valid, non-null results
-                mSearchResultsTextView.setText(githubSearchResults);
-            }
-            // TODO (16) Call showErrorMessage if the result is null in onPostExecute
+                // COMPLETED (17) Call showJsonDataView if we have valid, non-null results
+                showJsonDataView( githubSearchResults );
+            }// end if
+
+            // COMPLETED (16) Call showErrorMessage if the result is null in onPostExecute
+            if( githubSearchResults == null ){
+                showErrorMessage();
+            }// end if
         }
     }
 
