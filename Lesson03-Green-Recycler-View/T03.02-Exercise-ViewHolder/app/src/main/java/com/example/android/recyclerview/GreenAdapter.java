@@ -12,6 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * @author Samone Morris
+ * @date   03/08/2018
  */
 package com.example.android.recyclerview;
 
@@ -118,7 +121,7 @@ public class GreenAdapter extends RecyclerView.Adapter<GreenAdapter.NumberViewHo
     }
 
     // COMPLETED (12) Create a class called NumberViewHolder that extends RecyclerView.ViewHolder
-    protected class NumberViewHolder extends RecyclerView.ViewHolder {
+    class NumberViewHolder extends RecyclerView.ViewHolder {
 
         // COMPLETED (13) Within NumberViewHolder, create a TextView variable called listItemNumberView
 
