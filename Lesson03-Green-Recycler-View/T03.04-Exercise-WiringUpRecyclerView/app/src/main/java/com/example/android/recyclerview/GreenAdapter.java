@@ -16,11 +16,13 @@
 package com.example.android.recyclerview;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.TextView;
 
 /**
@@ -109,6 +111,7 @@ public class GreenAdapter extends RecyclerView.Adapter<GreenAdapter.NumberViewHo
 
         // Will display the position in the list, ie 0 through getItemCount() - 1
         TextView listItemNumberView;
+        TextView listItemNumberIndex;
 
         /**
          * Constructor for our ViewHolder. Within this constructor, we get a reference to our
@@ -121,6 +124,7 @@ public class GreenAdapter extends RecyclerView.Adapter<GreenAdapter.NumberViewHo
             super(itemView);
 
             listItemNumberView = (TextView) itemView.findViewById(R.id.tv_item_number);
+            listItemNumberIndex = (TextView) itemView.findViewById( R.id.tv_item_index );
         }
 
         /**
@@ -129,7 +133,28 @@ public class GreenAdapter extends RecyclerView.Adapter<GreenAdapter.NumberViewHo
          * @param listIndex Position of the item in the list
          */
         void bind(int listIndex) {
-            listItemNumberView.setText(String.valueOf(listIndex));
+            int index = listIndex % 10;
+            listItemNumberView.setText( String.valueOf(listIndex) );
+
+            ViewParent parent = listItemNumberView.getParent();
+            View view = (View) parent;
+            Context context = view.getContext();
+            Resources resources = context.getResources();
+
+            // I added the Color to display within each ViewHolder. Will be a value of [0, 10]
+            listItemNumberIndex.setText(
+                    resources.getString( R.string.viewholder_text ) +
+                    " " +
+                    index
+            );
+
+            // I added the background color to each ViewHolder to display a shade of Green based
+            // on the index.
+            view.setBackgroundColor(
+                    ColorUtils.getViewHolderBackgroundColorFromInstance(
+                            context,
+                            index
+            ));
         }
     }
 }
