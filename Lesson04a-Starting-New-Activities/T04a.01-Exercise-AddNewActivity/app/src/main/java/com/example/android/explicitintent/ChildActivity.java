@@ -1,3 +1,10 @@
+/* -------------------------------------------------------------------------------------------------
+ * Activity Class : ChildActivity
+ * -------------------------------------------------------------------------------------------------
+ * @author Samone Morris
+ * @date   03/10/2018
+ */
+
 package com.example.android.explicitintent;
 
 import android.support.v7.app.AppCompatActivity;
