@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity
         LoaderManager loaderManager = getSupportLoaderManager();
 
         // COMPLETED (22) Get our Loader by calling getLoader and passing the ID we specified
-        Loader loader = loaderManager.getLoader( GITHUB_SEARCH_LOADER_ID );
+        Loader<String> loader = loaderManager.getLoader( GITHUB_SEARCH_LOADER_ID );
 
         // COMPLETED (23) If the Loader was null, initialize it. Else, restart it.
         if( loader == null ){
