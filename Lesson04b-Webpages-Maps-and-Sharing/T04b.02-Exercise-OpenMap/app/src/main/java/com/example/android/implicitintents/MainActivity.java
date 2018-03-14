@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         Uri uri = new Uri.Builder()
                         .scheme( "geo" )
                         .path( "0,0" )
-                        .query( google_address )
+                        .appendQueryParameter( "q", google_address )
                         .build();
 
         // COMPLETED (7) Replace the Toast with a call to showMap, passing in the Uri from the previous step
