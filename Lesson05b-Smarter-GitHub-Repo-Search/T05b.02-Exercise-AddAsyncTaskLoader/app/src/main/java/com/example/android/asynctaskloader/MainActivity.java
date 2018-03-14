@@ -192,24 +192,27 @@ public class MainActivity extends AppCompatActivity
         // return null;
     }// end onCreateLoader(...)
 
-    // TODO (13) Override onLoadFinished
+    // COMPLETED (13) Override onLoadFinished
     @Override
     public void onLoadFinished(Loader<String> loader, String data) {
         // Within onLoadFinished
-        // TODO (14) Hide the loading indicator
+        // COMPLETED (14) Hide the loading indicator
+        mLoadingIndicator.setVisibility(View.INVISIBLE);
 
-        // TODO (15) Use the same logic used in onPostExecute to show the data or the error message
+        // COMPLETED (15) Use the same logic used in onPostExecute to show the data or the error message
+        if ( !TextUtils.isEmpty( data ) ) {
+            showJsonDataView();
+            mSearchResultsTextView.setText( data );
+        } else {
+            showErrorMessage();
+        }// end if  else
+
     }// end onLoadFInished()
 
-    // TODO (16) Override onLoaderReset as it is part of the interface we implement, but don't do anything in this method
+    // COMPLETED (16) Override onLoaderReset as it is part of the interface we implement, but don't do anything in this method
     @Override
     public void onLoaderReset(Loader<String> loader) {
-
-    }
-
-
-
-
+    }// end onLoaderReset()
 
     // COMPLETED (29) Delete the AsyncTask class
     /* public class GithubQueryTask extends AsyncTask<URL, Void, String> {
