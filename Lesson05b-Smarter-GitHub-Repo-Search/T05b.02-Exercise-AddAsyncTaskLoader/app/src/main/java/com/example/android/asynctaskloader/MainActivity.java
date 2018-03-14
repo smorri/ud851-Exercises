@@ -23,6 +23,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -145,40 +146,49 @@ public class MainActivity extends AppCompatActivity
 
     // COMPLETED (3) Override onCreateLoader
     @Override
-    public Loader<String> onCreateLoader(int id, Bundle args) {
+    public Loader<String> onCreateLoader(int id, final Bundle args) {
         // Within onCreateLoader
-        // TODO (4) Return a new AsyncTaskLoader<String> as an anonymous inner class with this as the constructor's parameter
-        return new AsyncTaskLoader<String>( this ) {
-
+        // COMPLETED (4) Return a new AsyncTaskLoader<String> as an anonymous inner class with this as the constructor's parameter
+        return new AsyncTaskLoader<String>( this ){
             // COMPLETED (5) Override onStartLoading
             @Override
             protected void onStartLoading() {
                 // Within onStartLoading
 
-                // TODO (6) If args is null, return.
+                // COMPLETED (6) If args is null, return.
+                if( args == null ){ return; }
 
-                // TODO (7) Show the loading indicator
+                // COMPLETED (7) Show the loading indicator
+                mLoadingIndicator.setVisibility( View.VISIBLE );
 
-                // TODO (8) Force a load
-                super.onStartLoading();
+                // COMPLETED (8) Force a load
+                this.forceLoad();
             }// end onStartLoading()
 
             // --------------------------------------------------------------------------------------
-            // TODO (9) Override loadInBackground
+            // COMPLETED (9) Override loadInBackground
             @Override
             public String loadInBackground() {
                 // Within loadInBackground
-                // TODO (10) Get the String for our URL from the bundle passed to onCreateLoader
+                // COMPLETED (10) Get the String for our URL from the bundle passed to onCreateLoader
+                String bundle_url = args.getString( SEARCH_QUERY_URL_EXTRA );
 
-                // TODO (11) If the URL is null or empty, return null
+                // COMPLETED (11) If the URL is null or empty, return null
+                if(TextUtils.isEmpty( bundle_url ) ){ return null;  }
 
-                // TODO (12) Copy the try / catch block from the AsyncTask's doInBackground method
-                return null;
+                // COMPLETED (12) Copy the try / catch block from the AsyncTask's doInBackground method
+                String githubSearchResults = null;
+                try {
+                    githubSearchResults = NetworkUtils.getResponseFromHttpUrl(
+                            new URL( bundle_url )
+                    );
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }// end try / catch
+
+                return githubSearchResults;
             }// end loadInBackground()
-
-
-        };// end new AsyncTaskLoader<String>(){...}
-
+        };
         // return null;
     }// end onCreateLoader(...)
 
@@ -189,7 +199,7 @@ public class MainActivity extends AppCompatActivity
         // TODO (14) Hide the loading indicator
 
         // TODO (15) Use the same logic used in onPostExecute to show the data or the error message
-    }
+    }// end onLoadFInished()
 
     // TODO (16) Override onLoaderReset as it is part of the interface we implement, but don't do anything in this method
     @Override
