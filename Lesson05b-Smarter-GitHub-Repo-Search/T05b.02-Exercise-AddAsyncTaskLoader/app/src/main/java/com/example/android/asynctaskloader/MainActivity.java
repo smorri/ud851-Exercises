@@ -12,18 +12,22 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * @author Samone Morris
+ * @date   03/14/2018
  */
 package com.example.android.asynctaskloader;
 
 import android.annotation.TargetApi;
-import android.app.LoaderManager;
-import android.content.AsyncTaskLoader;
-import android.content.Loader;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.LoaderManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,6 +45,8 @@ import java.net.URL;
 public class MainActivity extends AppCompatActivity
                           implements LoaderManager.LoaderCallbacks<String> {
 
+    private static final String TAG = MainActivity.class.getSimpleName();
+
     /* A constant to save and restore the URL that is being displayed */
     private static final String SEARCH_QUERY_URL_EXTRA = "query";
 
@@ -49,7 +55,7 @@ public class MainActivity extends AppCompatActivity
     //private static final String SEARCH_RESULTS_RAW_JSON = "results";
 
     // COMPLETED (2) Create a constant int to uniquely identify your loader. Call it GITHUB_SEARCH_LOADER
-    private static final int GITHUB_SEARCH_LOADER = 1;
+    private static final int GITHUB_SEARCH_LOADER_ID = 1;
 
     private EditText mSearchBoxEditText;
 
@@ -81,12 +87,15 @@ public class MainActivity extends AppCompatActivity
             //String rawJsonSearchResults = savedInstanceState.getString(SEARCH_RESULTS_RAW_JSON);
 
             mUrlDisplayTextView.setText(queryUrl);
+            Log.i( TAG, "Restoring URL Query Text" );
 
             // COMPLETED (25) Remove the code that displays the JSON
             //mSearchResultsTextView.setText(rawJsonSearchResults);
         }
 
-        // TODO (24) Initialize the loader with GITHUB_SEARCH_LOADER as the ID, null for the bundle, and this for the context
+        // COMPLETED (24) Initialize the loader with GITHUB_SEARCH_LOADER as the ID, null for the bundle, and this for the context
+        getSupportLoaderManager()
+                .initLoader( GITHUB_SEARCH_LOADER_ID, null, this );
     }
 
     /**
@@ -97,7 +106,11 @@ public class MainActivity extends AppCompatActivity
     private void makeGithubSearchQuery() {
         String githubQuery = mSearchBoxEditText.getText().toString();
 
-        // TODO (17) If no search was entered, indicate that there isn't anything to search for and return
+        // COMPLETED (17) If no search was entered, indicate that there isn't anything to search for and return
+        if( TextUtils.isEmpty( githubQuery ) ){
+            mUrlDisplayTextView.setText("No query entered. Try again");
+            return;
+        }// end if
 
         URL githubSearchUrl = NetworkUtils.buildUrl(githubQuery);
         mUrlDisplayTextView.setText(githubSearchUrl.toString());
@@ -110,9 +123,27 @@ public class MainActivity extends AppCompatActivity
         Bundle bundle = new Bundle();
         bundle.putString( SEARCH_QUERY_URL_EXTRA, githubSearchUrl.toString() );
 
-        // TODO (21) Call getSupportLoaderManager and store it in a LoaderManager variable
-        // TODO (22) Get our Loader by calling getLoader and passing the ID we specified
-        // TODO (23) If the Loader was null, initialize it. Else, restart it.
+        // COMPLETED (21) Call getSupportLoaderManager and store it in a LoaderManager variable
+        LoaderManager loaderManager = getSupportLoaderManager();
+
+        // COMPLETED (22) Get our Loader by calling getLoader and passing the ID we specified
+        Loader loader = loaderManager.getLoader( GITHUB_SEARCH_LOADER_ID );
+
+        // COMPLETED (23) If the Loader was null, initialize it. Else, restart it.
+        if( loader == null ){
+            loaderManager.initLoader(
+                    GITHUB_SEARCH_LOADER_ID,
+                    bundle,
+                    this
+            );
+        } else {
+            Log.i( TAG, "Restarting Loader" );
+            loaderManager.restartLoader(
+                    GITHUB_SEARCH_LOADER_ID,
+                    bundle,
+                    this
+            );
+        }// end if / else
     }
 
     /**
@@ -149,11 +180,15 @@ public class MainActivity extends AppCompatActivity
     public Loader<String> onCreateLoader(int id, final Bundle args) {
         // Within onCreateLoader
         // COMPLETED (4) Return a new AsyncTaskLoader<String> as an anonymous inner class with this as the constructor's parameter
+
+        Log.i( TAG, "Initialiing Loader" );
+
         return new AsyncTaskLoader<String>( this ){
             // COMPLETED (5) Override onStartLoading
             @Override
             protected void onStartLoading() {
                 // Within onStartLoading
+                Log.i( TAG, "In onStartLoading()" );
 
                 // COMPLETED (6) If args is null, return.
                 if( args == null ){ return; }
@@ -170,6 +205,8 @@ public class MainActivity extends AppCompatActivity
             @Override
             public String loadInBackground() {
                 // Within loadInBackground
+                Log.i( TAG, "In loadInBackground()" );
+
                 // COMPLETED (10) Get the String for our URL from the bundle passed to onCreateLoader
                 String bundle_url = args.getString( SEARCH_QUERY_URL_EXTRA );
 
@@ -196,6 +233,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onLoadFinished(Loader<String> loader, String data) {
         // Within onLoadFinished
+        Log.i( TAG, "In onLoadFinished()" );
+
         // COMPLETED (14) Hide the loading indicator
         mLoadingIndicator.setVisibility(View.INVISIBLE);
 
