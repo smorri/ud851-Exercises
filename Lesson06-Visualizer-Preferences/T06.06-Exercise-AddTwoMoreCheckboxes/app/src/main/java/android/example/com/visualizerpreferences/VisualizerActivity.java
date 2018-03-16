@@ -14,12 +14,16 @@ package android.example.com.visualizerpreferences;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * @author Samone Morris
+ * @date   03/16/18
  */
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.example.com.visualizerpreferences.AudioVisuals.AudioInputReader;
 import android.example.com.visualizerpreferences.AudioVisuals.VisualizerView;
 import android.os.Build;
@@ -48,15 +52,31 @@ public class VisualizerActivity extends AppCompatActivity implements SharedPrefe
         setupPermissions();
     }
 
-    // TODO (4) Update the code in setupSharedPreferences and onSharedPreferenceChanged to update
+    // COMPLETED (4) Update the code in setupSharedPreferences and onSharedPreferenceChanged to update
     // mVisualizerView to show the current values stored in shared preferences.
     private void setupSharedPreferences() {
         // Get all of the values from shared preferences to set it up
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        mVisualizerView.setShowBass(sharedPreferences.getBoolean(getString(R.string.pref_show_bass_key),
-                getResources().getBoolean(R.bool.pref_show_bass_default)));
-        mVisualizerView.setShowMid(true);
-        mVisualizerView.setShowTreble(true);
+        Resources resources = getResources();
+
+        mVisualizerView.setShowBass(
+                sharedPreferences.getBoolean(
+                        resources.getString(R.string.pref_show_bass_key),
+                        resources.getBoolean(R.bool.pref_show_bass_default)
+        ));
+
+        mVisualizerView.setShowMid(
+                sharedPreferences.getBoolean(
+                        resources.getString(R.string.pref_show_mid_key),
+                        resources.getBoolean(R.bool.pref_show_mid_default)
+        ));
+
+        mVisualizerView.setShowTreble(
+                sharedPreferences.getBoolean(
+                        resources.getString(R.string.pref_show_treble_key),
+                        resources.getBoolean(R.bool.pref_show_treble_default)
+        ));
+
         mVisualizerView.setMinSizeScale(1);
         mVisualizerView.setColor(getString(R.string.pref_color_red_value));
         // Register the listener
@@ -65,9 +85,35 @@ public class VisualizerActivity extends AppCompatActivity implements SharedPrefe
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(getString(R.string.pref_show_bass_key))) {
-            mVisualizerView.setShowBass(sharedPreferences.getBoolean(key, getResources().getBoolean(R.bool.pref_show_bass_default)));
-        }
+        Resources resources = getResources();
+
+        // Check if the Bass preference was changed
+        if ( key.equals(resources.getString(R.string.pref_show_bass_key)) ) {
+            mVisualizerView.setShowBass(
+                    sharedPreferences.getBoolean(
+                            key,
+                            resources.getBoolean(R.bool.pref_show_bass_default)
+            ));
+        }// end if
+
+        // Check if the Mid-Range preference was changed
+        else if ( key.equals(resources.getString(R.string.pref_show_mid_key)) ) {
+            mVisualizerView.setShowMid(
+                    sharedPreferences.getBoolean(
+                            key,
+                            resources.getBoolean(R.bool.pref_show_mid_default)
+            ));
+        }// end if
+
+        // Check if the Treble preference was changed
+        else if ( key.equals(resources.getString(R.string.pref_show_treble_key)) ) {
+            mVisualizerView.setShowTreble(
+                    sharedPreferences.getBoolean(
+                            key,
+                            resources.getBoolean(R.bool.pref_show_treble_default)
+                    ));
+            return;
+        }// end if
     }
 
     @Override
