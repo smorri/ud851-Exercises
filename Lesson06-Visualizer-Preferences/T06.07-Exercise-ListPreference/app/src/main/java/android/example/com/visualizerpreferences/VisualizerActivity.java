@@ -20,6 +20,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.example.com.visualizerpreferences.AudioVisuals.AudioInputReader;
 import android.example.com.visualizerpreferences.AudioVisuals.VisualizerView;
 import android.os.Build;
@@ -48,11 +49,12 @@ public class VisualizerActivity extends AppCompatActivity implements SharedPrefe
         setupPermissions();
     }
 
-    // TODO (4) Update setupSharedPreferences and onSharedPreferenceChanged to load the color
+    // COMPLETED (4) Update setupSharedPreferences and onSharedPreferenceChanged to load the color
     // from shared preferences. Call setColor, passing in the color you got
     private void setupSharedPreferences() {
         // Get all of the values from shared preferences to set it up
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
         mVisualizerView.setShowBass(sharedPreferences.getBoolean(getString(R.string.pref_show_bass_key),
                 getResources().getBoolean(R.bool.pref_show_bass_default)));
         mVisualizerView.setShowMid(sharedPreferences.getBoolean(getString(R.string.pref_show_mid_range_key),
@@ -60,21 +62,28 @@ public class VisualizerActivity extends AppCompatActivity implements SharedPrefe
         mVisualizerView.setShowTreble(sharedPreferences.getBoolean(getString(R.string.pref_show_treble_key),
                 getResources().getBoolean(R.bool.pref_show_treble_default)));
         mVisualizerView.setMinSizeScale(1);
-        mVisualizerView.setColor(getString(R.string.pref_color_red_value));
+
+        // mVisualizerView.setColor(getString(R.string.pref_color_red_value));
+        getShapeColorFromPreferences( sharedPreferences, getResources() );
+
         // Register the listener
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        Resources resources = getResources();
+
         if (key.equals(getString(R.string.pref_show_bass_key))) {
             mVisualizerView.setShowBass(sharedPreferences.getBoolean(key, getResources().getBoolean(R.bool.pref_show_bass_default)));
         } else if (key.equals(getString(R.string.pref_show_mid_range_key))) {
             mVisualizerView.setShowMid(sharedPreferences.getBoolean(key, getResources().getBoolean(R.bool.pref_show_mid_range_default)));
         } else if (key.equals(getString(R.string.pref_show_treble_key))) {
             mVisualizerView.setShowTreble(sharedPreferences.getBoolean(key, getResources().getBoolean(R.bool.pref_show_treble_default)));
-        }
-    }
+        } else if ( key.equals( resources.getString(R.string.pref_key_colors) ) ){
+            getShapeColorFromPreferences( sharedPreferences, resources );
+        }// end if / else if
+    }//end onSharedPreferenceChanged(...)
 
     @Override
     protected void onDestroy() {
@@ -83,6 +92,14 @@ public class VisualizerActivity extends AppCompatActivity implements SharedPrefe
         PreferenceManager.getDefaultSharedPreferences(this)
                 .unregisterOnSharedPreferenceChangeListener(this);
     }
+
+    private void getShapeColorFromPreferences(SharedPreferences sharedPreferences, Resources resources){
+        mVisualizerView.setColor(
+                sharedPreferences.getString(
+                        resources.getString( R.string.pref_key_colors ),
+                        resources.getString( R.string.pref_color_red_value )
+                ));
+    }// end getShapeColorFromPreferences(...)
 
     /**
      * Methods for setting up the menu
