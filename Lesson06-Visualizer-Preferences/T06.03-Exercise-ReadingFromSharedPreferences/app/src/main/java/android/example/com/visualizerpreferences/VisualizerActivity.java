@@ -14,15 +14,20 @@ package android.example.com.visualizerpreferences;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * @author Samone Morris
+ * @date   03/16/2018
  */
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.example.com.visualizerpreferences.AudioVisuals.AudioInputReader;
 import android.example.com.visualizerpreferences.AudioVisuals.VisualizerView;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -33,6 +38,7 @@ import android.widget.Toast;
 
 public class VisualizerActivity extends AppCompatActivity {
 
+    private static final String KEY_BASS = "show_bass";
     private static final int MY_PERMISSION_RECORD_AUDIO_REQUEST_CODE = 88;
     private VisualizerView mVisualizerView;
     private AudioInputReader mAudioInputReader;
@@ -42,15 +48,19 @@ public class VisualizerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visualizer);
         mVisualizerView = (VisualizerView) findViewById(R.id.activity_visualizer);
-        defaultSetup();
+        setupSharedPreferences();
         setupPermissions();
     }
 
-    // TODO (1) Change the name of default setup to setupSharedPreferences
-    private void defaultSetup() {
-        // TODO (2) Get a reference to the default shared preferences from the PreferenceManager class
-        // TODO (3) Get the value of the show_bass checkbox preference and use it to call setShowBass
-        mVisualizerView.setShowBass(true);
+    // COMPLETED (1) Change the name of default setup to setupSharedPreferences
+    private void setupSharedPreferences() {
+        // COMPLETED (2) Get a reference to the default shared preferences from the PreferenceManager class
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                getApplicationContext()
+        );
+
+        // COMPLETED (3) Get the value of the show_bass checkbox preference and use it to call setShowBass
+        mVisualizerView.setShowBass( sharedPreferences.getBoolean( KEY_BASS, true ) );
         mVisualizerView.setShowMid(true);
         mVisualizerView.setShowTreble(true);
         mVisualizerView.setMinSizeScale(1);
