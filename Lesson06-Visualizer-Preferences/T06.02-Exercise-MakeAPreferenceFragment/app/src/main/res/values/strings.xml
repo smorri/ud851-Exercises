@@ -16,6 +16,6 @@
     <!-- Value in SharedPreferences for green color option -->
     <string name="pref_color_green_value" translatable="false">green</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- COMPLETED : Remove or change this placeholder text -->
+    <!-- <string name="hello_blank_fragment">Hello blank fragment</string> -->
 </resources>
