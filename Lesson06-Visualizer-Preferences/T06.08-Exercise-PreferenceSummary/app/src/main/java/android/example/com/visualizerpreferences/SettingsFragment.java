@@ -27,8 +27,9 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
 import android.widget.Toast;
 
-// TODO (1) Implement OnSharedPreferenceChangeListener
-public class SettingsFragment extends PreferenceFragmentCompat {
+// COMPLETED (1) Implement OnSharedPreferenceChangeListener
+public class SettingsFragment extends PreferenceFragmentCompat
+                              implements OnSharedPreferenceChangeListener{
 
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
@@ -36,22 +37,57 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         // Add visualizer preferences, defined in the XML file in res->xml->pref_visualizer
         addPreferencesFromResource(R.xml.pref_visualizer);
 
-        // TODO (3) Get the preference screen, get the number of preferences and iterate through
-        // all of the preferences if it is not a checkbox preference, call the setSummary method
-        // passing in a preference and the value of the preference
+        // COMPLETED (3) Get the preference screen, get the number of preferences and iterate through all of the preferences if it is not a checkbox preference, call the setSummary method passing in a preference and the value of the preference
+        PreferenceScreen preferenceScreen = getPreferenceScreen();
+        SharedPreferences sharedPreferences = preferenceScreen.getSharedPreferences();
+        int numPreferences = preferenceScreen.getPreferenceCount(),
+            i;
+
+        // Iterate through all of the preferences
+        for(i = 0; i < numPreferences; i++){
+            Preference preference = preferenceScreen.getPreference( i );
+
+            // If the preference is NOT a CheckboxPreference ...
+            if( !( preference instanceof CheckBoxPreference ) ){
+                // ... call the setPreferenceSummary method passing in a preference and the value
+                // of the preference
+                setPreferenceSummary(
+                        preference,
+                        sharedPreferences.getString(
+                                preference.getKey(),
+                                ""
+                ));
+            }// end if
+        }// end for
     }
 
-    // TODO (4) Override onSharedPreferenceChanged and, if it is not a checkbox preference,
-    // call setPreferenceSummary on the changed preference
+    // TODO (4) Override onSharedPreferenceChanged and, if it is not a checkbox preference, call setPreferenceSummary on the changed preference
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
-    // TODO (2) Create a setPreferenceSummary which takes a Preference and String value as parameters.
-    // This method should check if the preference is a ListPreference and, if so, find the label
-    // associated with the value. You can do this by using the findIndexOfValue and getEntries methods
-    // of Preference.
-
-    // TODO (5) Register and unregister the OnSharedPreferenceChange listener (this class) in
-    // onCreate and onDestroy respectively.
+    }// end if
 
 
+    // COMPLETED (2) Create a setPreferenceSummary which takes a Preference and String value as parameters. This method should check if the preference is a ListPreference and, if so, find the label associated with the value. You can do this by using the findIndexOfValue and getEntries methods of Preference.
+    private void setPreferenceSummary(Preference preference, String value){
+        if( preference instanceof ListPreference ){
+            // Check if the preference is a ListPreferenc
+            ListPreference listPreference = (ListPreference) preference;
+
+            // Find the label associated with the value
+            int index = listPreference.findIndexOfValue( value );
+
+            // Get a list of all labels of the entries for this ListPreference
+            CharSequence[] entries = listPreference.getEntries();
+
+            // As long as the index is greater than 0, programmatically set the summary by matching
+            // the index with the array of entries, and setting the label to the Summary.
+            if( index >= 0 ){
+                listPreference.setSummary( entries[ index ] );
+            }// end if
+        }// end if
+    }// end setPreferenceSummary(...)
+
+    // TODO (5) Register and unregister the OnSharedPreferenceChange listener (this class) in onCreate and onDestroy respectively.
 
 }
