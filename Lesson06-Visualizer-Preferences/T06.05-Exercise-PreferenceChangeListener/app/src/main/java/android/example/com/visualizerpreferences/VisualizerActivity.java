@@ -84,11 +84,13 @@ public class VisualizerActivity extends AppCompatActivity
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Resources resources = getResources();
 
-        mVisualizerView.setShowBass(
-                sharedPreferences.getBoolean(
-                        key,
-                        resources.getBoolean( R.bool.pref_show_bass_default )
-                ));
+        if( key.equals(resources.getString( R.string.pref_show_bass_key )) ){
+            mVisualizerView.setShowBass(
+                    sharedPreferences.getBoolean(
+                            key,
+                            resources.getBoolean( R.bool.pref_show_bass_default )
+                    ));
+        }// end if
     }// end onSharedPreferenceChanged(...)
 
     /**
