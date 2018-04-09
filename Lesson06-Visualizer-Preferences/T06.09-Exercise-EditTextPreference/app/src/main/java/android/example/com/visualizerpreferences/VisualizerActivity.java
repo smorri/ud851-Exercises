@@ -20,6 +20,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.example.com.visualizerpreferences.AudioVisuals.AudioInputReader;
 import android.example.com.visualizerpreferences.AudioVisuals.VisualizerView;
 import android.os.Build;
@@ -48,8 +49,7 @@ public class VisualizerActivity extends AppCompatActivity implements SharedPrefe
         setupPermissions();
     }
 
-    // TODO (2) Modify the setupSharedPreferences method and onSharedPreferencesChanged method to
-    // properly update the minSizeScale, assuming a proper numerical value is saved in shared preferences
+    // COMPLETED (2) Modify the setupSharedPreferences method and onSharedPreferencesChanged method to properly update the minSizeScale, assuming a proper numerical value is saved in shared preferences
     private void setupSharedPreferences() {
         // Get all of the values from shared preferences to set it up
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -59,11 +59,37 @@ public class VisualizerActivity extends AppCompatActivity implements SharedPrefe
                 getResources().getBoolean(R.bool.pref_show_mid_range_default)));
         mVisualizerView.setShowTreble(sharedPreferences.getBoolean(getString(R.string.pref_show_treble_key),
                 getResources().getBoolean(R.bool.pref_show_treble_default)));
-        mVisualizerView.setMinSizeScale(1);
+        // mVisualizerView.setMinSizeScale(1);
         loadColorFromPreferences(sharedPreferences);
+
+        setSizeFromPreference( sharedPreferences, getResources() );
         // Register the listener
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
+
+    private void setSizeFromPreference(SharedPreferences sharedPreferences, Resources resources) {
+        float value;
+
+        // Try to parse the value stored in the SharedPreference from the EditTextPreference.
+        // If the value cannot be parsed, set the default multiplier value of 1. Otherwise, set the
+        // the value stored.
+        try {
+            value = Float.parseFloat(
+                    sharedPreferences.getString(
+                            resources.getString(R.string.pref_size_key),
+                            resources.getString(R.string.pref_size_default)
+            ));
+
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            value = 1f;
+        } catch (Resources.NotFoundException e) {
+            e.printStackTrace();
+            return;
+        }// end try / catch
+
+        mVisualizerView.setMinSizeScale( value );
+    }// end setSizeFromPreference(...)
 
     private void loadColorFromPreferences(SharedPreferences sharedPreferences) {
         mVisualizerView.setColor(sharedPreferences.getString(getString(R.string.pref_color_key),
@@ -74,6 +100,8 @@ public class VisualizerActivity extends AppCompatActivity implements SharedPrefe
     // class implement OnSharedPreferenceChangedListener
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        Resources resources = getResources();
+
         if (key.equals(getString(R.string.pref_show_bass_key))) {
             mVisualizerView.setShowBass(sharedPreferences.getBoolean(key, getResources().getBoolean(R.bool.pref_show_bass_default)));
         } else if (key.equals(getString(R.string.pref_show_mid_range_key))) {
@@ -82,6 +110,8 @@ public class VisualizerActivity extends AppCompatActivity implements SharedPrefe
             mVisualizerView.setShowTreble(sharedPreferences.getBoolean(key, getResources().getBoolean(R.bool.pref_show_treble_default)));
         } else if (key.equals(getString(R.string.pref_color_key))) {
             loadColorFromPreferences(sharedPreferences);
+        } else if( key.equals( resources.getString(R.string.pref_size_key) ) ){
+            setSizeFromPreference( sharedPreferences, resources );
         }
     }
 
