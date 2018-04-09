@@ -14,22 +14,28 @@ package android.example.com.visualizerpreferences;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * @author Samone Morris
+ * @date   04/09/2018 (Re-completed as original file was lost due to motherboard failure)
  */
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
+import android.support.v7.preference.Preference.OnPreferenceChangeListener;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
 import android.widget.Toast;
 
-// TODO (1) Implement OnPreferenceChangeListener
+// COMPLETED (1) Implement OnPreferenceChangeListener
 public class SettingsFragment extends PreferenceFragmentCompat implements
-        OnSharedPreferenceChangeListener {
+        OnSharedPreferenceChangeListener,
+        OnPreferenceChangeListener{
 
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
@@ -51,7 +57,16 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
                 setPreferenceSummary(p, value);
             }
         }
-        // TODO (3) Add the OnPreferenceChangeListener specifically to the EditTextPreference
+        // COMPLETED (3) Add the OnPreferenceChangeListener specifically to the EditTextPreference
+        Resources resources = getResources();
+        EditTextPreference editTextPreference =
+                (EditTextPreference) prefScreen.findPreference(
+                        resources.getString(R.string.pref_size_key)
+        );
+
+        if( editTextPreference != null ){
+            editTextPreference.setOnPreferenceChangeListener( this );
+        }// end if
     }
 
     @Override
@@ -88,11 +103,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         }
     }
 
-    // TODO (2) Override onPreferenceChange. This method should try to convert the new preference value
-    // to a float; if it cannot, show a helpful error message and return false. If it can be converted
-    // to a float check that that float is between 0 (exclusive) and 3 (inclusive). If it isn't, show
-    // an error message and return false. If it is a valid number, return true.
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,4 +116,47 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         getPreferenceScreen().getSharedPreferences()
                 .unregisterOnSharedPreferenceChangeListener(this);
     }
+
+    // COMPLETED (2) Override onPreferenceChange. This method should try to convert the new preference value to a float; if it cannot, show a helpful error message and return false. If it can be converted to a float check that that float is between 0 (exclusive) and 3 (inclusive). If it isn't, show an error message and return false. If it is a valid number, return true.
+    @Override
+    public boolean onPreferenceChange(Preference preference, Object newValue) {
+        if( preference != null && preference instanceof EditTextPreference ){
+            EditTextPreference editTextPreference = (EditTextPreference) preference;
+            String previous_value = editTextPreference.getText();
+
+            // Ensure that the value entered can be represented as a Float value. If not display
+            // an error message.
+            float float_value;
+
+            try {
+                float_value = Float.parseFloat( String.valueOf( newValue ) );
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+
+                editTextPreference.setText( previous_value );
+                editTextPreference.setSummary( previous_value );
+
+                Toast.makeText( getContext(),
+                                "Enter a valid number between 1 and 3, inclusive",
+                                Toast.LENGTH_LONG )
+                .show();
+                return false;
+            }// end try / catch
+
+            // If the number is not between [1, 3] display an error message
+            if( float_value < 1f || float_value > 3f ){
+                editTextPreference.setText( previous_value );
+                editTextPreference.setSummary( previous_value );
+
+                Toast.makeText( getContext(),
+                        "Enter a value between 1 and 3, inclusive",
+                        Toast.LENGTH_LONG )
+                        .show();
+
+                return false;
+            }// end if
+        }// end if
+
+        return true;
+    }// end onPreferenceChange(...)
 }
