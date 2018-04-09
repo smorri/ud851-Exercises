@@ -6,6 +6,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import static com.example.android.waitlist.data.WaitlistContract.*;
 
+/**
+ * SQLite Database Helper
+ *
+ * @author Samone Morris
+ * @date   04/09/18 (re-completed due to lost file during motherboard failure)
+ */
+
 // COMPLETED (1) extend the SQLiteOpenHelper class
 public class WaitlistDbHelper extends SQLiteOpenHelper {
     // COMPLETED (2) Create a static final String called DATABASE_NAME and set it to "waitlist.db"
