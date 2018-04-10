@@ -73,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Link the adapter to the RecyclerView
         waitlistRecyclerView.setAdapter(mAdapter);
-
     }
 
     /**
@@ -140,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
         mAdapter.swapCursor( getAllGuests() );
 
         // COMPLETED (20) To make the UI look nice, call .getText().clear() on both EditTexts, also call clearFocus() on mNewPartySizeEditText
+        mNewPartySizeEditText.clearFocus();
         mNewGuestNameEditText.getText().clear();
         mNewPartySizeEditText.getText().clear();
     }
