@@ -1,17 +1,28 @@
 package com.example.android.waitlist;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.example.android.waitlist.data.TestUtil;
+import com.example.android.waitlist.data.WaitlistDbHelper;
+
+/**
+ * SQLite Database : Main Activity
+ *
+ * @author Samone Morris
+ * @date 04/10/18 (re-completed due to lost file during motherboard failure)
+ */
 
 public class MainActivity extends AppCompatActivity {
 
     private GuestListAdapter mAdapter;
 
-    // TODO (1) Create a local field member of type SQLiteDatabase called mDb
+    // COMPLETED (1) Create a local field member of type SQLiteDatabase called mDb
+    private SQLiteDatabase mDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,11 +40,14 @@ public class MainActivity extends AppCompatActivity {
         // Create an adapter for that cursor to display the data
         mAdapter = new GuestListAdapter(this);
 
-        // TODO (2) Create a WaitlistDbHelper instance, pass "this" to the constructor as context
+        // COMPLETED (2) Create a WaitlistDbHelper instance, pass "this" to the constructor as context
+        WaitlistDbHelper dbHelper = new WaitlistDbHelper( this );
 
-        // TODO (3) Get a writable database reference using getWritableDatabase and store it in mDb
+        // COMPLETED (3) Get a writable database reference using getWritableDatabase and store it in mDb
+        mDb = dbHelper.getWritableDatabase();
 
-        // TODO (4) call insertFakeData from TestUtil and pass the database reference mDb
+        // COMPLETED (4) call insertFakeData from TestUtil and pass the database reference mDb
+        TestUtil.insertFakeData( mDb );
 
         // TODO (7) Run the getAllGuests function and store the result in a Cursor variable
 
@@ -41,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Link the adapter to the RecyclerView
         waitlistRecyclerView.setAdapter(mAdapter);
-
     }
 
     /**
