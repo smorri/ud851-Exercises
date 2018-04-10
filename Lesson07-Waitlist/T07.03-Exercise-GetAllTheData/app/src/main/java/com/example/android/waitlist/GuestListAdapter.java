@@ -7,6 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+/**
+ * SQLite Database : Recycler View Adapter class
+ *
+ * @author Samone Morris
+ * @date 04/10/18 (re-completed due to lost file during motherboard failure)
+ */
+
 
 public class GuestListAdapter extends RecyclerView.Adapter<GuestListAdapter.GuestViewHolder> {
 
