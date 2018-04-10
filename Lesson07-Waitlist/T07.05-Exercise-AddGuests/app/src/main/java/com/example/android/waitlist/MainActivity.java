@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.android.waitlist.data.TestUtil;
 import com.example.android.waitlist.data.WaitlistContract;
@@ -81,16 +82,49 @@ public class MainActivity extends AppCompatActivity {
      * @param view The calling view (button)
      */
     public void addToWaitlist(View view) {
+        String input_name = mNewGuestNameEditText.getText().toString().trim(),
+               input_partysize = mNewPartySizeEditText.getText().toString().trim();
 
-        // TODO (9) First thing, check if any of the EditTexts are empty, return if so
+        // COMPLETED (9) First thing, check if any of the EditTexts are empty, return if so
+        if( input_name.isEmpty() ){
+            Toast.makeText(
+                    this,
+                    "Enter a guest name first",
+                    Toast.LENGTH_LONG
+            ).show();
 
-        // TODO (10) Create an integer to store the party size and initialize to 1
+            return;
+        }// end if
 
-        // TODO (11) Use Integer.parseInt to parse mNewPartySizeEditText.getText to an integer
+        if( input_partysize.isEmpty() ){
+            Toast.makeText(
+                    this,
+                    "Enter a party size value greater than 0",
+                    Toast.LENGTH_LONG
+            ).show();
 
-        // TODO (12) Make sure you surround the Integer.parseInt with a try catch and log any exception
+            return;
+        }// end if
 
-        // TODO (14) call addNewGuest with the guest name and party size
+        // COMPLETED (10) Create an integer to store the party size and initialize to 1
+        int partySize = 1;
+
+        // COMPLETED (11) Use Integer.parseInt to parse mNewPartySizeEditText.getText to an integer
+        // COMPLETED (12) Make sure you surround the Integer.parseInt with a try catch and log any exception
+        try {
+            partySize = Integer.parseInt( input_partysize );
+        } catch (NumberFormatException e) {
+            Log.e( LOG_TAG, e.getMessage() );
+            Toast.makeText(
+                    this,
+                    "Enter a valid number for the party size greater than 0",
+                    Toast.LENGTH_LONG
+            ).show();
+            return;
+        }// end try / catch
+
+        // COMPLETED (14) call addNewGuest with the guest name and party size
+        addNewGuest( input_name, partySize );
 
         // TODO (19) call mAdapter.swapCursor to update the cursor by passing in getAllGuests()
 

@@ -10,6 +10,12 @@ import android.widget.TextView;
 
 import com.example.android.waitlist.data.WaitlistContract;
 
+/**
+ * SQLite Database : Recycler View Adapter class
+ *
+ * @author Samone Morris
+ * @date   04/10/10 (re-completed due to lost file from motherboard failure)
+ */
 
 public class GuestListAdapter extends RecyclerView.Adapter<GuestListAdapter.GuestViewHolder> {
 
