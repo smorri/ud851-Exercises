@@ -123,13 +123,25 @@ public class MainActivity extends AppCompatActivity {
             return;
         }// end try / catch
 
+        if( partySize <= 0 ){
+            Toast.makeText(
+                    this,
+                    "Enter a valid number for the party size greater than 0",
+                    Toast.LENGTH_LONG
+            ).show();
+
+            return;
+        }// end if
+
         // COMPLETED (14) call addNewGuest with the guest name and party size
         addNewGuest( input_name, partySize );
 
-        // TODO (19) call mAdapter.swapCursor to update the cursor by passing in getAllGuests()
+        // COMPLETED (19) call mAdapter.swapCursor to update the cursor by passing in getAllGuests()
+        mAdapter.swapCursor( getAllGuests() );
 
-        // TODO (20) To make the UI look nice, call .getText().clear() on both EditTexts, also call clearFocus() on mNewPartySizeEditText
-
+        // COMPLETED (20) To make the UI look nice, call .getText().clear() on both EditTexts, also call clearFocus() on mNewPartySizeEditText
+        mNewGuestNameEditText.getText().clear();
+        mNewPartySizeEditText.getText().clear();
     }
 
 
