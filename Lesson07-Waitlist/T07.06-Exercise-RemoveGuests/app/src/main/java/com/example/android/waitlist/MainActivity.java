@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.example.android.waitlist.data.WaitlistContract;
+import com.example.android.waitlist.data.WaitlistContract.WaitlistEntry;
 import com.example.android.waitlist.data.WaitlistDbHelper;
 
 
@@ -135,10 +136,19 @@ public class MainActivity extends AppCompatActivity {
         return mDb.insert(WaitlistContract.WaitlistEntry.TABLE_NAME, null, cv);
     }
 
+    // COMPLETED (1) Create a new function called removeGuest that takes long id as input and returns a boolean
+    private boolean removeGuest( final long id ){
+        // COMPLETED (2) Inside, call mDb.delete to pass in the TABLE_NAME and the condition that WaitlistEntry._ID equals id
+        int code = mDb.delete(
+                WaitlistEntry.TABLE_NAME,
+                WaitlistEntry._ID + " = " + id,
+                null
+        );
 
-    // TODO (1) Create a new function called removeGuest that takes long id as input and returns a boolean
+        return code > 0;   // returns true if number of rows deleted is greater than 0, false
+                           // otherwise.
+    }// end removeGuest(...)
 
-    // TODO (2) Inside, call mDb.delete to pass in the TABLE_NAME and the condition that WaitlistEntry._ID equals id
 
 
 }
