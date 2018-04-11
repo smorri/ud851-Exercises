@@ -12,14 +12,26 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
+*
+* @author Samone Morris
+* @date   04/11/18
 */
 
 package com.example.android.todolist;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.Toast;
+
+import com.example.android.todolist.data.TaskContract;
+import com.example.android.todolist.data.TaskContract.TaskEntry;
 
 
 public class AddTaskActivity extends AppCompatActivity {
@@ -43,15 +55,35 @@ public class AddTaskActivity extends AppCompatActivity {
      * It retrieves user input and inserts that new task data into the underlying database.
      */
     public void onClickAddTask(View view) {
-        // Not yet implemented
-        // TODO (6) Check if EditText is empty, if not retrieve input and store it in a ContentValues object
+        EditText editText = (EditText) findViewById( R.id.editTextTaskDescription );
+        String descriptionInput = editText.getText().toString();
+        ContentValues values;
 
-        // TODO (7) Insert new task data via a ContentResolver
+        // COMPLETED (6) Check if EditText is empty, if not retrieve input and store it in a ContentValues object
+        if( descriptionInput.isEmpty() ){ return; }
 
-        // TODO (8) Display the URI that's returned with a Toast
-        // [Hint] Don't forget to call finish() to return to MainActivity after this insert is complete
+        values = new ContentValues();
+        values.put( TaskEntry.COLUMN_DESCRIPTION, descriptionInput );
+        values.put( TaskEntry.COLUMN_PRIORITY, mPriority );
 
-    }
+        // COMPLETED (7) Insert new task data via a ContentResolver
+        ContentResolver resolver = getContentResolver();
+        Uri uri = resolver.insert(
+                TaskEntry.CONTENT_URI,
+                values
+        );
+
+        // COMPLETED (8) Display the URI that's returned with a Toast [Hint] Don't forget to call finish() to return to MainActivity after this insert is complete
+        if( uri != null ){
+            Toast.makeText(
+                    getBaseContext(),
+                    uri.toString(),
+                    Toast.LENGTH_LONG
+            ).show();
+        }// end if
+
+        finish();
+    }// end onClickAddTask(...)
 
 
     /**
