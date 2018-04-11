@@ -12,11 +12,15 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
+*
+* @author Samone Morris
+* @date   04/11/18
 */
 
 package com.example.android.todolist.data;
 
 import android.content.ContentProvider;
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
@@ -156,15 +160,39 @@ public class TaskContentProvider extends ContentProvider {
     @Override
     public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
 
-        // TODO (1) Get access to the database and write URI matching code to recognize a single item
+        // COMPLETED (1) Get access to the database and write URI matching code to recognize a single item
+        final SQLiteDatabase db = mTaskDbHelper.getWritableDatabase();
 
-        // TODO (2) Write the code to delete a single row of data
-        // [Hint] Use selections to delete an item by its row ID
+        // COMPLETED (2) Write the code to delete a single row of data [Hint] Use selections to delete an item by its row ID
+        int match_code = sUriMatcher.match( uri ),
+            result;
 
-        // TODO (3) Notify the resolver of a change and return the number of items deleted
+        switch( match_code ){
+            case TASK_WITH_ID:
+                String rowID = uri.getPathSegments().get( 1 );
 
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
+                result = db.delete(
+                        TaskContract.TaskEntry.TABLE_NAME,
+                        selection,
+                        selectionArgs
+                );
+
+                break;
+
+            default:
+                throw new UnsupportedOperationException( "Cannot perform delete on URI : " + uri );
+        }// end switch(...)
+        
+        // COMPLETED (3) Notify the resolver of a change and return the number of items deleted
+        if( result > 0 ){
+            Context context = getContext();
+            ContentResolver resolver = context.getContentResolver();
+            resolver.notifyChange( uri, null );
+        }// end if
+
+        return result;
+        // throw new UnsupportedOperationException("Not yet implemented");
+    }// end delete(...)
 
 
     @Override
