@@ -12,6 +12,9 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
+*
+* @author Samone Morris
+* @date   04/11/18
 */
 
 package com.example.android.todolist.data;
@@ -19,20 +22,42 @@ package com.example.android.todolist.data;
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
 // Verify that TaskContentProvider extends from ContentProvider and implements required methods
 public class TaskContentProvider extends ContentProvider {
+    // COMPLETED (1) Define final integer constants for the directory of tasks and a single item. It's convention to use 100, 200, 300, etc for directories, and related ints (101, 102, ..) for items in that directory.
+    public final static int TASKS = 100,           // Tasks Directory
+                            TASKS_ID = 101;        // Tasks ID within Tasks Directory
 
-    // TODO (1) Define final integer constants for the directory of tasks and a single item.
-    // It's convention to use 100, 200, 300, etc for directories,
-    // and related ints (101, 102, ..) for items in that directory.
+    // COMPLETED (3) Declare a static variable for the Uri matcher that you construct
+    private static final UriMatcher uriMatcher = buildUriMatcher();
 
-    // TODO (3) Declare a static variable for the Uri matcher that you construct
+    private static final String WILDCARD_NUMERIC = "/#";
 
-    // TODO (2) Define a static buildUriMatcher method that associates URI's with their int match
+    // COMPLETED (2) Define a static buildUriMatcher method that associates URI's with their int match
+    public static UriMatcher buildUriMatcher(){
+        UriMatcher matcher = new UriMatcher( UriMatcher.NO_MATCH );
+
+        // Add a URI match for our Tasks directory
+        uriMatcher.addURI(
+                TaskContract.AUTHORITY,
+                TaskContract.PATH_TASKS,
+                TASKS
+        );
+
+        // Add a URI match for an item (Tasks ID) within the Tasks directory
+        uriMatcher.addURI(
+                TaskContract.AUTHORITY,
+                TaskContract.PATH_TASKS + WILDCARD_NUMERIC,
+                TASKS_ID
+        );
+
+        return matcher;
+    }// end buildUriMatcher()
 
     // Member variable for a TaskDbHelper that's initialized in the onCreate() method
     private TaskDbHelper mTaskDbHelper;
