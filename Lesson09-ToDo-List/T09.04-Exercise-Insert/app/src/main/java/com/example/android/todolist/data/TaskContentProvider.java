@@ -12,17 +12,26 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
+*
+* @author Samone Morris
+* @date   04/11/18
 */
 
 package com.example.android.todolist.data;
 
 import android.content.ContentProvider;
+import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+
+import static com.example.android.todolist.data.TaskContract.*;
 
 // Verify that TaskContentProvider extends from ContentProvider and implements required methods
 public class TaskContentProvider extends ContentProvider {
@@ -51,8 +60,8 @@ public class TaskContentProvider extends ContentProvider {
           For each kind of uri you may want to access, add the corresponding match with addURI.
           The two calls below add matches for the task directory and a single item by ID.
          */
-        uriMatcher.addURI(TaskContract.AUTHORITY, TaskContract.PATH_TASKS, TASKS);
-        uriMatcher.addURI(TaskContract.AUTHORITY, TaskContract.PATH_TASKS + "/#", TASK_WITH_ID);
+        uriMatcher.addURI(AUTHORITY, PATH_TASKS, TASKS);
+        uriMatcher.addURI(AUTHORITY, PATH_TASKS + "/#", TASK_WITH_ID);
 
         return uriMatcher;
     }
@@ -78,17 +87,51 @@ public class TaskContentProvider extends ContentProvider {
 
     @Override
     public Uri insert(@NonNull Uri uri, ContentValues values) {
-        // TODO (1) Get access to the task database (to write new data to)
+        Uri result;
 
-        // TODO (2) Write URI matching code to identify the match for the tasks directory
+        // COMPLETED (1) Get access to the task database (to write new data to)
+        SQLiteDatabase db = mTaskDbHelper.getWritableDatabase();
 
-        // TODO (3) Insert new values into the database
-        // TODO (4) Set the value for the returnedUri and write the default case for unknown URI's
+        // COMPLETED (2) Write URI matching code to identify the match for the tasks directory
+        int match_code = sUriMatcher.match( uri );
 
-        // TODO (5) Notify the resolver if the uri has been changed, and return the newly inserted URI
+        // Verify the URI Match code IS the Tasks directory code. Any other code should throw an
+        // exception
+        switch ( match_code ){
+            case TASKS :
+                // COMPLETED (3) Insert new values into the database
+                // Insert the content values into the Tasks table
+                long id = db.insert(
+                        TaskEntry.TABLE_NAME,
+                        null,
+                        values
+                );
 
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
+                // COMPLETED (4) Set the value for the returnedUri and write the default case for unknown URI's
+                // If the insertion was not successful throw an exception.
+                if( id > 0 ){
+                    result = ContentUris.withAppendedId(
+                            TaskEntry.CONTENT_URI,
+                            id
+                    );
+                } else {
+                    throw new SQLException( "Failed to insert data into Tasks table using URI " + uri );
+                }// end if / else
+
+                break;
+            default:
+                throw new UnsupportedOperationException( "Incorrect URI for this insertion : " + uri );
+        }// end switch
+
+        // COMPLETED (5) Notify the resolver if the uri has been changed, and return the newly inserted URI
+        Context context = getContext();
+        ContentResolver contentResolver = context.getContentResolver();
+        contentResolver.notifyChange( uri, null );
+
+        return result;
+        // throw new UnsupportedOperationException("Not yet implemented");
+    }// end insert(...)
+
 
 
     @Override
