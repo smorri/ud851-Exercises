@@ -12,12 +12,15 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
+*
+* @author Samone Morris
+* @date   04/10/18
 */
 
 package com.example.android.todolist.data;
 
+import android.net.Uri;
 import android.provider.BaseColumns;
-
 
 public class TaskContract {
 
@@ -29,11 +32,17 @@ public class TaskContract {
         3) Path(s) to the tasks directory
         4) Content URI for data in the TaskEntry class
       */
+    public static final String SCHEME  = "content://",
+                               AUTHORITY = "com.example.android.todolist",
+                               PATH_TASKS = "tasks";
 
+    public static final Uri BASE_CONTENT_URI = Uri.parse( SCHEME + "" + AUTHORITY );
 
     /* TaskEntry is an inner class that defines the contents of the task table */
     public static final class TaskEntry implements BaseColumns {
-
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
+                                                              .appendPath( PATH_TASKS )
+                                                              .build();
 
         // Task table and column names
         public static final String TABLE_NAME = "tasks";
