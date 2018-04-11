@@ -12,10 +12,14 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
+*
+* @author Samone Morris
+* @date   04/11/18
 */
 
 package com.example.android.todolist;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -28,6 +32,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
+
+import com.example.android.todolist.data.TaskContract;
+import com.example.android.todolist.data.TaskContract.TaskEntry;
 
 
 public class MainActivity extends AppCompatActivity implements
@@ -146,11 +153,26 @@ public class MainActivity extends AppCompatActivity implements
             public Cursor loadInBackground() {
                 // Will implement to load data
 
-                // TODO (5) Query and load all task data in the background; sort by priority
-                // [Hint] use a try/catch block to catch any errors in loading data
+                // COMPLETED (5) Query and load all task data in the background; sort by priority [Hint] use a try/catch block to catch any errors in loading data
+                ContentResolver resolver = getContentResolver();
 
-                return null;
-            }
+                Cursor cursor = null;
+
+                try {
+                    cursor = resolver.query(
+                            TaskEntry.CONTENT_URI,
+                            null,
+                            null,
+                            null,
+                            TaskEntry.COLUMN_PRIORITY
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }// end try / catch
+
+                return cursor;
+                //return null;
+            }// end loadInBackground()
 
             // deliverResult sends the result of the load, a Cursor, to the registered listener
             public void deliverResult(Cursor data) {

@@ -12,11 +12,15 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
+*
+* @author Samone Morris
+* @date   04/11/18
 */
 
 package com.example.android.todolist.data;
 
 import android.content.ContentProvider;
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
@@ -25,6 +29,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+
+import com.example.android.todolist.data.TaskContract.TaskEntry;
 
 import static com.example.android.todolist.data.TaskContract.TaskEntry.TABLE_NAME;
 
@@ -96,7 +102,7 @@ public class TaskContentProvider extends ContentProvider {
                 // Inserting values into tasks table
                 long id = db.insert(TABLE_NAME, null, values);
                 if ( id > 0 ) {
-                    returnUri = ContentUris.withAppendedId(TaskContract.TaskEntry.CONTENT_URI, id);
+                    returnUri = ContentUris.withAppendedId(TaskEntry.CONTENT_URI, id);
                 } else {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 }
@@ -119,16 +125,40 @@ public class TaskContentProvider extends ContentProvider {
     @Override
     public Cursor query(@NonNull Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
+        // COMPLETED (1) Get access to underlying database (read-only for query)
+        final SQLiteDatabase db = mTaskDbHelper.getReadableDatabase();
 
-        // TODO (1) Get access to underlying database (read-only for query)
+        // COMPLETED (2) Write URI match code and set a variable to return a Cursor
+        int match_code = sUriMatcher.match( uri );
+        Cursor cursor;
 
-        // TODO (2) Write URI match code and set a variable to return a Cursor
+        // Determine if the URI matches to the Tasks directory. If not, default with a
+        // exception
+        switch ( match_code ){
+            case TASKS:
+                // COMPLETED (3) Query for the tasks directory and write a default case
+                cursor = db.query(
+                        TaskEntry.TABLE_NAME,   // Table Name parameter
+                        projection,             // Columns parameter
+                        selection,              // Selection parameter
+                        selectionArgs,          // Selection Arguments parameter
+                        null,           // Group By parameter
+                        null,            // Having parameter
+                        sortOrder              // Sort By Parameter
+                );
+                break;
 
-        // TODO (3) Query for the tasks directory and write a default case
+            default :
+                throw new UnsupportedOperationException( "Invalid URI for query : " + uri );
+        }// end switch
 
-        // TODO (4) Set a notification URI on the Cursor and return that Cursor
+        // COMPLETED (4) Set a notification URI on the Cursor and return that Cursor
+        Context context = getContext();
+        ContentResolver resolver = context.getContentResolver();
+        cursor.setNotificationUri( resolver, uri );
 
-        throw new UnsupportedOperationException("Not yet implemented");
+        return cursor;
+        // throw new UnsupportedOperationException("Not yet implemented");
     }
 
 
