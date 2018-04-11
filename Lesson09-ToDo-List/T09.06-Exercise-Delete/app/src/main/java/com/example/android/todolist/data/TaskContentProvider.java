@@ -182,7 +182,7 @@ public class TaskContentProvider extends ContentProvider {
             default:
                 throw new UnsupportedOperationException( "Cannot perform delete on URI : " + uri );
         }// end switch(...)
-        
+
         // COMPLETED (3) Notify the resolver of a change and return the number of items deleted
         if( result > 0 ){
             Context context = getContext();

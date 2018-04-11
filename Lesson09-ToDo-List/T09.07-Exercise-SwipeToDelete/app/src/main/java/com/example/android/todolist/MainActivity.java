@@ -12,12 +12,17 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
+*
+* @author Samone Morris
+* @date   04/11/18
 */
 
 package com.example.android.todolist;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
@@ -31,6 +36,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.example.android.todolist.data.TaskContract;
+import com.example.android.todolist.data.TaskContract.TaskEntry;
 
 
 public class MainActivity extends AppCompatActivity implements
@@ -78,13 +84,26 @@ public class MainActivity extends AppCompatActivity implements
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 // Here is where you'll implement swipe to delete
 
-                // TODO (1) Construct the URI for the item to delete
-                //[Hint] Use getTag (from the adapter code) to get the id of the swiped item
+                // Get the ID of the item
+                int id = (int) viewHolder.itemView.getTag();
 
-                // TODO (2) Delete a single row of data using a ContentResolver
+                // COMPLETED (1) Construct the URI for the item to delete [Hint] Use getTag (from the adapter code) to get the id of the swiped item
+                Uri uri = TaskEntry.CONTENT_URI
+                        .buildUpon()
+                        .appendPath( Integer.toString( id ) )
+                        .build();
 
-                // TODO (3) Restart the loader to re-query for all tasks after a deletion
-                
+                // COMPLETED (2) Delete a single row of data using a ContentResolver
+                ContentResolver resolver = getContentResolver();
+                resolver.delete( uri, null, null );
+
+                // COMPLETED (3) Restart the loader to re-query for all tasks after a deletion
+                LoaderManager loaderManager = getSupportLoaderManager();
+                loaderManager.restartLoader(
+                        TASK_LOADER_ID,
+                        null,
+                        MainActivity.this
+                );
             }
         }).attachToRecyclerView(mRecyclerView);
 
@@ -161,11 +180,11 @@ public class MainActivity extends AppCompatActivity implements
                 // [Hint] use a try/catch block to catch any errors in loading data
 
                 try {
-                    return getContentResolver().query(TaskContract.TaskEntry.CONTENT_URI,
+                    return getContentResolver().query(TaskEntry.CONTENT_URI,
                             null,
                             null,
                             null,
-                            TaskContract.TaskEntry.COLUMN_PRIORITY);
+                            TaskEntry.COLUMN_PRIORITY);
 
                 } catch (Exception e) {
                     Log.e(TAG, "Failed to asynchronously load data.");
